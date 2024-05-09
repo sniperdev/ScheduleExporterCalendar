@@ -14,6 +14,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.FileNotFoundException;
@@ -44,7 +45,7 @@ public class CalendarQuickstart {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private static final List<String> SCOPES =
-            Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
+            Collections.singletonList(CalendarScopes.CALENDAR);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
     /**
@@ -105,5 +106,12 @@ public class CalendarQuickstart {
                 System.out.printf("%s (%s)\n", event.getSummary(), start);
             }
         }
+        Event event = new Event();
+        event.setSummary("test");
+        EventDateTime time = new EventDateTime().setDate(new DateTime("2024-05-15T00:00:00.000Z"));
+        event.setStart(time);
+        String calendarId = "primary";
+        service.events().insert(calendarId, event).execute();
+        System.out.printf("Event created: %s\n", event.getHtmlLink());
     }
 }
