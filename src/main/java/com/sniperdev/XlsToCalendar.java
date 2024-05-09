@@ -18,10 +18,12 @@ public class XlsToCalendar {
         XSSFWorkbook workbook = new XSSFWorkbook(file);
         XSSFSheet sheet = workbook.getSheet("Table 2");
 
-        //Tutaj wyciągamy ilość wierszy
+        //Tutaj wyciągamy ilość wiersze
+        //LEWO PRAWO
         int rows = sheet.getPhysicalNumberOfRows();
 
-        //Tutaj wyciągamy ilość kolumn
+        //Tutaj wyciągamy ilość kolumny
+        //GÓRA DÓŁ
         int columns = sheet.getRow(0).getPhysicalNumberOfCells();
 
         //Tutaj wyciągamy dane z komórki
@@ -40,49 +42,20 @@ public class XlsToCalendar {
         //Znalezienie indeksu imienia
         int rowIndex = -1;
         int columnIndex = -1;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                if (data[i][j].equals("Igor Spychała")) {
-                    rowIndex = i;
-                    columnIndex = j;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                if (data[r][c].equals("Igor Spychała")) {
+                    rowIndex = r;
+                    columnIndex = c;
                     break;
                 }
             }
-        }
-        System.out.println("Index: " + columnIndex + " " + rowIndex);
-        System.out.println("Data: " + data[rowIndex][columnIndex]);
-
-        int rowIndexDay = -1;
-        int columnIndexDay = -1;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                if (data[i][j].equals("Ilość zmian")) {
-                    rowIndexDay = i;
-                    columnIndexDay = j;
-                    break;
-                }
-            }
-        }
-        System.out.println("Index: " + columnIndexDay + " " + rowIndexDay);
-        System.out.println("Data: " + data[rowIndexDay][columnIndexDay]);
-
-        //Wypisanie od data to końca wiersza
-        for (int i = columnIndexDay+1; i < columns; i++) {
-            System.out.println(data[rowIndexDay][i]);
         }
 
         //Chciałbym połączyć te dwie tablice w jedną 2D tablicę
-        String[][] calendar = new String[2][columns-3];
-        for (int i = 0; i < columns-3; i++) {
-            calendar[0][i] = data[rowIndexDay][i+columnIndexDay+1];
-            calendar[1][i] = data[rowIndex][i+columnIndex+1];
-        }
-        //Wypisanie calendar
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < columns; j++) {
-                System.out.print(calendar[i][j] + " ");
-            }
-            System.out.println();
+        String[][] calendar = new String[2][rows-3];
+        for (int r = 4; r < columns; r++) {
+            System.out.println(r-3 + " " + data[7][r]);
         }
     }
 }
