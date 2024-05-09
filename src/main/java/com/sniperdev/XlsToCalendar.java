@@ -15,6 +15,49 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class XlsToCalendar {
     private final CalendarEventManager calendarEventManager;
 
+    public XlsToCalendar(String filePath) throws IOException, InvalidFormatException, GeneralSecurityException {
+        CalendarAuthenticator authenticator = new CalendarAuthenticator();
+        Calendar service = authenticator.authenticate();
+        this.calendarEventManager = new CalendarEventManager(service);
+
+        File file = new File(filePath);
+        XSSFWorkbook workbook = new XSSFWorkbook(file);
+        XSSFSheet sheet = workbook.getSheet("Table 2");
+
+        int rows = sheet.getPhysicalNumberOfRows();
+        int columns = sheet.getRow(0).getPhysicalNumberOfCells();
+
+        DataFormatter formatter = new DataFormatter();
+
+        String[][] data = new String[rows][columns];
+
+        //Wypełnianie tablicy danymi
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                data[i][j] = formatter.formatCellValue(sheet.getRow(i).getCell(j));
+            }
+        }
+
+        int rowIndex = -1;
+        int columnIndex = -1;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                if (data[r][c].equals("Igor Spychała")) {
+                    rowIndex = r;
+                    columnIndex = c;
+                    break;
+                }
+            }
+        }
+
+        String[][] calendar = new String[2][rows-3];
+        for (int r = 4; r < columns; r++) {
+            if (!data[7][r].isEmpty()){
+                CalendarEventManager.addEvent(getStartDate(r-3, data[7][r]));
+            }
+
+        }
+    }
 
     public String getDayOfWeek(int day){
         String date;
@@ -73,50 +116,5 @@ public class XlsToCalendar {
         }
         System.out.println(shiftTime.getStartDate() + " " + shiftTime.getEndDate());
         return shiftTime;
-    }
-
-    public XlsToCalendar() throws IOException, InvalidFormatException, GeneralSecurityException {
-        CalendarAuthenticator authenticator = new CalendarAuthenticator();
-        Calendar service = authenticator.authenticate();
-        this.calendarEventManager = new CalendarEventManager(service);
-
-        File file = new File("input.xlsx");
-        XSSFWorkbook workbook = new XSSFWorkbook(file);
-        XSSFSheet sheet = workbook.getSheet("Table 2");
-
-
-        int rows = sheet.getPhysicalNumberOfRows();
-        int columns = sheet.getRow(0).getPhysicalNumberOfCells();
-
-        DataFormatter formatter = new DataFormatter();
-
-        String[][] data = new String[rows][columns];
-
-        //Wypełnianie tablicy danymi
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                data[i][j] = formatter.formatCellValue(sheet.getRow(i).getCell(j));
-            }
-        }
-
-        int rowIndex = -1;
-        int columnIndex = -1;
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < columns; c++) {
-                if (data[r][c].equals("Igor Spychała")) {
-                    rowIndex = r;
-                    columnIndex = c;
-                    break;
-                }
-            }
-        }
-
-        String[][] calendar = new String[2][rows-3];
-        for (int r = 4; r < columns; r++) {
-            if (!data[7][r].isEmpty()){
-                CalendarEventManager.addEvent(getStartDate(r-3, data[7][r]));
-            }
-
-        }
     }
 }
