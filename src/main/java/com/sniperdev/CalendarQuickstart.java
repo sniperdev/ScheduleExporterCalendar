@@ -108,10 +108,20 @@ public class CalendarQuickstart {
         }
         Event event = new Event();
         event.setSummary("test");
-        EventDateTime time = new EventDateTime().setDate(new DateTime("2024-05-15T00:00:00.000Z"));
-        event.setStart(time);
-        String calendarId = "primary";
-        service.events().insert(calendarId, event).execute();
+        DateTime startDateTime = new DateTime("2024-05-10T09:00:00+02:00");
+        EventDateTime start = new EventDateTime()
+                .setDateTime(startDateTime)
+                .setTimeZone("Europe/Warsaw");
+        event.setStart(start);
+
+        DateTime endDateTime = new DateTime("2024-05-10T17:00:00+02:00");
+        EventDateTime end = new EventDateTime()
+                .setDateTime(endDateTime)
+                .setTimeZone("Europe/Warsaw");
+        event.setEnd(end);
+
+        String calendarId = "d601c7510461700bba15343e1e96e20f232d823ab4137a5edd8faa53d747c788@group.calendar.google.com";
+        event = service.events().insert(calendarId, event).execute();
         System.out.printf("Event created: %s\n", event.getHtmlLink());
     }
 }
