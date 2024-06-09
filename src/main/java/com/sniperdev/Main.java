@@ -7,11 +7,12 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Witaj w eksporterze pliku Excel do Google Calendar");
-        System.out.println("Podaj ścieżkę do pliku Excel z twoim grafikiem: ");
-        String filePath = scanner.nextLine();
+        String filePath = "C:\\Users\\igiig\\Documents\\Webstorm Projects\\JAVA\\ScheduleExporterCalendar\\src\\main\\resources\\input.xlsx";
+        System.out.println("Podaj numer miesiąca w formacie np. 06: ");
+        String month = scanner.nextLine();
 
         try{
-            XlsToCalendar xlsToCalendar = new XlsToCalendar(filePath);
+            XlsToCalendar xlsToCalendar = new XlsToCalendar(filePath, month);
         } catch (Exception e){
             System.out.println("Wystąpił błąd podczas przetwarzania pliku: " + e.getMessage());
         }
